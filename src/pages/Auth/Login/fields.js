@@ -1,6 +1,5 @@
 import * as Yup from "yup";
-import TextInput from "../../components/TextInput";
-
+import TextInput from "../../../components/TextInput";
 
 export const fields = [
   {

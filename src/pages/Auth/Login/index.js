@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
-import Form from "../../components/Form";
+import Form from "../../../components/Form";
 import { initialValues, fields, loginSchema } from "./fields";
-import axios from "../../utils/axios";
+import axios from "../../../utils/axios";
 
 export class Login extends PureComponent {
   submit = async (values, actions) => {

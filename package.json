@@ -153,5 +153,5 @@
       "react-app"
     ]
   },
-  "proxy": "http://localhost:3000/"
+  "proxy": "https://7277c2e205c2.ngrok.io/"
 }

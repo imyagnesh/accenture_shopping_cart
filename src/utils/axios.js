@@ -1,13 +1,22 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://20fb262250f6.ngrok.io/",
+  baseURL: "https://7277c2e205c2.ngrok.io",
   timeout: 3000,
 });
 
 instance.interceptors.request.use(
   function (config) {
     // Do something before request is sent
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: token,
+        "Access-Control-Allow-Origin":  "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+      };
+    }
     return config;
   },
   function (error) {
