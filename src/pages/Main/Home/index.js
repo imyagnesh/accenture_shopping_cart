@@ -54,7 +54,7 @@ export class Home extends PureComponent {
   // only once
   async componentDidMount() {
     try {
-      const res = await axiosInstance.get("/api/user");
+      const res = await axiosInstance.get("/api/product");
       console.log(res);
       // 2. set new state value
       this.setState({
@@ -86,19 +86,21 @@ export class Home extends PureComponent {
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>is Admin</th>
+              <th>Product Name</th>
+              <th>Product Description</th>
+              <th>Price</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => {
               return (
                 <tr key={user._id}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
+                  <td>{user.productName}</td>
+                  <td>{user.description}</td>
+                  <td>{user.price}</td>
                   <td>
-                    <input type="checkbox" checked={user.isAdmin} disabled />
+                    <button type="button">Add To Cart</button>
                   </td>
                 </tr>
               );
