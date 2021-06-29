@@ -77,14 +77,16 @@ export class Home extends PureComponent {
     // console.log(this.headerRef.current); O(1) -> best
   }
 
-  addToCart = async (product) => {
+  addToCart = async (productId, quantity, cartId) => {
     try {
-      const cartInfo = await axiosInstance.post("/api/cart", {
-        productId: product._id,
-        quantity: 1,
+      await axiosInstance.post("/api/cart", {
+        productId: productId,
+        quantity: quantity,
+        cartId,
       });
+      const cart = await axiosInstance.get("/api/cart");
       this.setState({
-        cart: [...this.state.cart, cartInfo],
+        cart: cart,
       });
     } catch (error) {}
   };
@@ -121,14 +123,28 @@ export class Home extends PureComponent {
                   <td>
                     {addedProduct ? (
                       <div>
-                        <button>+</button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            this.addToCart(product._id, 1, addedProduct._id)
+                          }
+                        >
+                          +
+                        </button>
                         <span>{addedProduct.quantity}</span>
-                        <button>-</button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            this.addToCart(product._id, -1, addedProduct._id)
+                          }
+                        >
+                          -
+                        </button>
                       </div>
                     ) : (
                       <button
                         type="button"
-                        onClick={() => this.addToCart(product)}
+                        onClick={() => this.addToCart(product._id, 1)}
                       >
                         Add To Cart
                       </button>
