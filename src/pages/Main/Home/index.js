@@ -91,6 +91,14 @@ export class Home extends PureComponent {
     } catch (error) {}
   };
 
+  checkout = async () => {
+    await axiosInstance.delete("/api/cart");
+    const cart = await axiosInstance.get("/api/cart");
+    this.setState({
+      cart: cart,
+    });
+  };
+
   callMe = () => {
     console.log(this.state.greet);
   };
@@ -155,6 +163,10 @@ export class Home extends PureComponent {
             })}
           </tbody>
         </table>
+
+        <button type="button" onClick={this.checkout}>
+          Checkout
+        </button>
         {/* {products.map((product) => {})} */}
       </div>
     );
