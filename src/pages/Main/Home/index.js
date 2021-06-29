@@ -35,9 +35,10 @@ export class Home extends PureComponent {
     // 1. set default state value
     this.state = {
       greet: `Hello, ${props.firstName}`,
-      users: [],
+      products: [],
+      cart: [],
     };
-    // fetch(user data) -> store to state -> X
+    // fetch(product data) -> store to state -> X
 
     // fetch('visited home page at 6:30 IST')
   }
@@ -54,11 +55,14 @@ export class Home extends PureComponent {
   // only once
   async componentDidMount() {
     try {
-      const res = await axiosInstance.get("/api/product");
-      console.log(res);
+      const [products, cartDetails] = await Promise.all([
+        axiosInstance.get("/api/product"),
+        axiosInstance.get("/api/cart"),
+      ]);
       // 2. set new state value
       this.setState({
-        users: res,
+        products: products,
+        cart: cartDetails,
       });
     } catch (error) {
       console.log("error");
@@ -73,12 +77,24 @@ export class Home extends PureComponent {
     // console.log(this.headerRef.current); O(1) -> best
   }
 
+  addToCart = async (product) => {
+    try {
+      const cartInfo = await axiosInstance.post("/api/cart", {
+        productId: product._id,
+        quantity: 1,
+      });
+      this.setState({
+        cart: [...this.state.cart, cartInfo],
+      });
+    } catch (error) {}
+  };
+
   callMe = () => {
     console.log(this.state.greet);
   };
 
   render() {
-    const { users } = this.state;
+    const { products, cart } = this.state;
     return (
       <div>
         <h1 ref={this.headerRef}>Home Page</h1>
@@ -93,21 +109,37 @@ export class Home extends PureComponent {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => {
+            {products.map((product) => {
+              const addedProduct = cart.find(
+                (x) => x.productId === product._id
+              );
               return (
-                <tr key={user._id}>
-                  <td>{user.productName}</td>
-                  <td>{user.description}</td>
-                  <td>{user.price}</td>
+                <tr key={product._id}>
+                  <td>{product.productName}</td>
+                  <td>{product.description}</td>
+                  <td>{product.price}</td>
                   <td>
-                    <button type="button">Add To Cart</button>
+                    {addedProduct ? (
+                      <div>
+                        <button>+</button>
+                        <span>{addedProduct.quantity}</span>
+                        <button>-</button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => this.addToCart(product)}
+                      >
+                        Add To Cart
+                      </button>
+                    )}
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        {/* {users.map((user) => {})} */}
+        {/* {products.map((product) => {})} */}
       </div>
     );
   }
